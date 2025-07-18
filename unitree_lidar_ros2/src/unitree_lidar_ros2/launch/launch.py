@@ -27,7 +27,7 @@ def generate_launch_description():
         ],
     )
 
-    # PointCloud2 → LaserScan converter not sure if this even works though...
+    # PointCloud2 → LaserScan converter though we need to
     pcl_node = Node(
         package='pointcloud_to_laserscan',
         executable='pointcloud_to_laserscan_node',
@@ -45,13 +45,25 @@ def generate_launch_description():
             'angle_increment': pi / 360.0,  # 0.5° per beam
             'scan_time': 1.0 / 10.0,         # target 10 Hz
             'range_min': 0.1,
-            'range_max': 50.0,
+            'range_max': 80.0,
             'use_inf': True,
         }],
         output='screen',
     )
+    static_tf = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=[
+            '0', '0', '0',  # x y z
+            '0', '0', '0', '1',  # quaternion rot
+            'base_link',  # parent
+            'unilidar_lidar'  # child (the frame stamped on your PointCloud2)
+        ]
+    )
+
 
     return LaunchDescription([
         unitree_node,
-        # pcl_node,
+        pcl_node,
+        static_tf
     ])
