@@ -178,7 +178,7 @@ void UnitreeLidarSDKNode::closeLidar() {
     lsdk_->setLidarWorkingMode(STANDBY);
 
     // Wait a moment for the LIDAR to transition to standby mode
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(3000));//had to set a bit longer limit because it wouldn't exit the thread properly
 
     delete lsdk_;
     lsdk_ = nullptr;
